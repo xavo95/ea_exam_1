@@ -1,0 +1,76 @@
+<div class="container">
+  <div [hidden]="submitted">
+    <br>
+    <br>
+    <h1>Find Subject</h1>
+    <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name"
+               required
+               [(ngModel)]="model.name" name="name"
+               #name="ngModel">
+      </div>
+      <button type="button" class="btn btn-default" (click)="findSubject()">Find Subjects</button>
+      <button type="button" class="btn btn-default" (click)="findSubjectSorted()">Find Subjects Sorted</button>
+      <button type="button" class="btn btn-default" (click)="findSubjectByName()">Find Subjects By Name</button>
+      <button type="button" class="btn btn-default" (click)="findSubjectStudies()">Find Subjects By Studies</button>
+      <button type="button" class="btn btn-default" (click)="findSubjectBySemester()">Find Subjects By Semester</button>
+    </form>
+    <br>
+    <br>
+    <div class="form-group">
+      <label>Status: </label>
+      <label> {{ status_res }} </label>
+    </div>
+    <br>
+    <h3>Subjects (Click on subject row to see students)</h3>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Studies</th>
+        <th>Semester</th>
+      </tr>
+      <tr *ngFor="let item of subjects" (click)="clicked(item)">
+        <td> {{ item.name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td> {{ item.studies }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td> {{ item.semester }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      </tr>
+    </table>
+    <br>
+    <h3>Students</h3>
+    <br>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+      </tr>
+      <tr *ngFor="let item2 of students">
+        <td> {{ item2.name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td> {{ item2.age }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      </tr>
+    </table>
+    <br>
+    <h1>Add students to subject</h1>
+    <form (ngSubmit)="onSubmit()" #heroForm="ngForm">
+      <div class="form-group">
+        <label for="subject_name">Subject Name</label>
+        <select class="form-control" id="subject_name"
+                required
+                [(ngModel)]="selected_subject" name="subject_name"
+                #power="ngModel">
+          <option *ngFor="let pow of available_subjects" [value]="pow.name">{{pow.name}}</option>
+        </select>
+        <label for="student_name">Student Name</label>
+        <select class="form-control" id="student_name"
+                required
+                [(ngModel)]="selected_student" name="student_name"
+                #power="ngModel">
+          <option *ngFor="let pow of available_students" [value]="pow.name">{{pow.name}}</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-default" (click)="addStudent()">Add Student to Subject</button>
+    </form>
+  </div>
+
+</div>

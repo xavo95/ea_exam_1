@@ -2,6 +2,7 @@
 
 var Subjects = require('../models/subject');
 var studentsController = require('./studentController');
+var mongoose = require('mongoose');
 
 function addSubject(callback, name, studies, semester) {
     var subject = new Subjects({
@@ -21,7 +22,7 @@ function getSubjects(callback) {
 }
 
 function getSubjectByName(callback, name) {
-    Subjects.findOne({name: name}).populate('students').exec(function (err, subjects) {
+    Subjects.find({name: name}).populate('students').exec(function (err, subjects) {
         callback(err, subjects);
     });
 }
@@ -61,7 +62,10 @@ function addStudentToSubject(callback, subject_name, student_name) {
                 } else if (subject.length === 0) {
                     callback('There is no subjects with that name on database');
                 } else {
-                    var users = subject.students;
+                    var users = [];
+                    for(var i = 0; i < subject.students.length; i++) {
+                        users.push(mongoose.Types.ObjectId(subject.students[i].id));
+                    }
                     users.push(student._id);
                     Subjects.update({ name: subject_name }, { $set: { students: users }}, function (err, subject) {
                         callback(err);
