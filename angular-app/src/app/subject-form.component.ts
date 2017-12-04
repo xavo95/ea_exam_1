@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { Subject }    from './subject';
+import {Component} from '@angular/core';
+import {Subject} from './subject';
+import {Student} from './student';
 import {HttpClient} from "@angular/common/http";
 
 @Component({
@@ -8,25 +9,28 @@ import {HttpClient} from "@angular/common/http";
 })
 
 export class SubjectFormComponent {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   status_res: any;
-  subjects: any;
-  students: any;
+  subjects: Subject[];
+  students: Student[];
   model = new Subject('', '', '', '', []);
 
-  available_subjects: any;
-  available_students: any;
-  selected_subject: any;
-  selected_student: any;
+  available_subjects: Subject[];
+  available_students: Student[];
+  selected_subject: Subject;
+  selected_student: Student;
 
   submitted = false;
 
-  onSubmit() { this.submitted = true; }
+  onSubmit() {
+    this.submitted = true;
+  }
 
   findSubject() {
     this.http.get('/api/subject').subscribe(data => {
-      this.subjects = data;
+      Object.assign(this.subjects, data);
       this.status_res = '';
     }, err => {
       this.status_res = JSON.parse(err['error'])['message'];
@@ -36,7 +40,7 @@ export class SubjectFormComponent {
 
   findSubjectSorted() {
     this.http.get('/api/subject/sorted/get').subscribe(data => {
-      this.subjects = data;
+      Object.assign(this.subjects, data);
       this.status_res = '';
     }, err => {
       this.status_res = JSON.parse(err['error'])['message'];
@@ -46,7 +50,7 @@ export class SubjectFormComponent {
 
   findSubjectByName() {
     this.http.get('/api/subject/' + this.model.name).subscribe(data => {
-      this.subjects = data;
+      Object.assign(this.subjects, data);
       this.status_res = '';
     }, err => {
       this.status_res = JSON.parse(err['error'])['message'];
@@ -56,7 +60,7 @@ export class SubjectFormComponent {
 
   findSubjectStudies() {
     this.http.get('/api/subject/studies/' + this.model.name).subscribe(data => {
-      this.subjects = data;
+      Object.assign(this.subjects, data);
       this.status_res = '';
     }, err => {
       this.status_res = JSON.parse(err['error'])['message'];
@@ -66,7 +70,7 @@ export class SubjectFormComponent {
 
   findSubjectBySemester() {
     this.http.get('/api/subject/semester/' + this.model.name).subscribe(data => {
-      this.subjects = data;
+      Object.assign(this.subjects, data);
       this.status_res = '';
     }, err => {
       this.status_res = JSON.parse(err['error'])['message'];
@@ -80,22 +84,25 @@ export class SubjectFormComponent {
 
   fetchData() {
     this.http.get('/api/subject').subscribe(data => {
-      this.available_subjects = data;
+      Object.assign(this.available_subjects, data);
     });
     this.http.get('/api/student').subscribe(data => {
-      this.available_students = data;
+      Object.assign(this.available_students, data);
     });
   }
 
   addStudent() {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    this.http.put('/api/subject/adduser', {"subject_name": this.selected_subject, "student_name": this.selected_student}).subscribe(data => {
+    this.http.put('/api/subject/adduser', {
+      "subject_name": this.selected_subject,
+      "student_name": this.selected_student
+    }).subscribe(data => {
       this.status_res = data['message'];
     });
   }
 
-  clicked(item: any){
+  clicked(item: any) {
     this.students = item.students;
   }
 }
